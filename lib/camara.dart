@@ -104,7 +104,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               // Find the temp directory using the `path_provider` plugin.
               (await getTemporaryDirectory()).path,
               '${DateTime.now()}.png',
-            );
+            ).split(" ").join("");
             
             // Attempt to take a picture and log where it's been saved.
             await _controller.takePicture(path);
@@ -133,9 +133,6 @@ class Miniature extends StatefulWidget {
 }
 
 class _MiniatureState extends State<Miniature> {
-  //String _photoURI = 'assets/images/placeholder.png';
-  
-
   @override
   Widget build(BuildContext context) {
     return Column(

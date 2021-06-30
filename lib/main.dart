@@ -1,13 +1,22 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:nativejavacode/camara.dart';
+import 'postprocessing.dart';
 
 void main() => runApp(MyApp());
 
 // ignore: must_be_immutable
-class MyApp extends StatelessWidget {
-  Miniature photo1 = new Miniature(),
-      photo2 = new Miniature(),
-      photo3 = new Miniature();
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Miniature photo1 = new Miniature();
+
+  bool preloaded = false;
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -21,8 +30,25 @@ class MyApp extends StatelessWidget {
           ),
           body: ListView(
             padding: const EdgeInsets.all(8),
-            children: <Widget>[photo1, photo2, photo3],
+            children: <Widget>[
+              photo1,
+              FlatButton(
+                  onPressed: () {
+                    setImage(photo1);
+                  },
+                  child: Text('Hola')),
+              preloaded
+                  ? Image.file(File(photo1.globalpath))
+                  : Image.file(File('/data/user/0/com.example.nativejavacode/cache/2021-06-1918:01:42.976437.png'))
+            ],
           )),
     );
+  }
+
+  void setImage(Miniature photo1) {
+    preloaded = true;
+    setState(() {
+      segmentHSV(photo1.globalpath);
+    });
   }
 }
