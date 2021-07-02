@@ -263,25 +263,40 @@ class MeasureSet {
     this.tag = tag;
 
     this.longitudes = [
-      Longitud("acromiale", this.tag.etiquetas.elementAt(0).getCentro(),
-          this.tag.etiquetas.elementAt(1).getCentro()),
-      Longitud("radiale", this.tag.etiquetas.elementAt(1).getCentro(),
-          this.tag.etiquetas.elementAt(3).getCentro()),
-      Longitud("midstylon", this.tag.etiquetas.elementAt(2).getCentro(),
-          this.tag.etiquetas.elementAt(6).getCentro()),
-      Longitud(
-          "tronchanteriontibiale",
-          this.tag.etiquetas.elementAt(3).getCentro(),
-          this.tag.etiquetas.elementAt(5).getCentro()),
-      Longitud("tibiale", this.tag.etiquetas.elementAt(4).getCentro(),
-          this.tag.etiquetas.elementAt(7).getCentro()),
-      Longitud("illiospinale", this.tag.etiquetas.elementAt(2).getCentro(),
-          this.tag.etiquetas.elementAt(7).getCentro()),
-      Longitud("tronchanterion", this.tag.etiquetas.elementAt(4).getCentro(),
-          this.tag.etiquetas.elementAt(7).getCentro())
+      Longitud("acromiale", this.tag.etiquetas.elementAt(0).getCentro(),this.tag.etiquetas.elementAt(1).getCentro()),
+      Longitud("radiale", this.tag.etiquetas.elementAt(1).getCentro(),this.tag.etiquetas.elementAt(3).getCentro()),
+      Longitud("midstylon", this.tag.etiquetas.elementAt(2).getCentro(),this.tag.etiquetas.elementAt(6).getCentro()),
+      Longitud("tronchanteriontibiale",this.tag.etiquetas.elementAt(3).getCentro(),this.tag.etiquetas.elementAt(5).getCentro()),
+      Longitud("tibiale", this.tag.etiquetas.elementAt(4).getCentro(),this.tag.etiquetas.elementAt(7).getCentro()),
+      Longitud("illiospinale", this.tag.etiquetas.elementAt(2).getCentro(),this.tag.etiquetas.elementAt(7).getCentro()),
+      Longitud("tronchanterion", this.tag.etiquetas.elementAt(4).getCentro(),this.tag.etiquetas.elementAt(7).getCentro())
     ];
-    this.perimetros = [];
-    this.diametro = [];
+    this.perimetros = [
+      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(10).getCentro(),this.tag.etiquetas.elementAt(15).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(14).getCentro(),this.tag.etiquetas.elementAt(6).getCentro())),
+      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(13).getCentro(),this.tag.etiquetas.elementAt(16).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(15).getCentro(),this.tag.etiquetas.elementAt(5).getCentro())),
+      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(10).getCentro(),this.tag.etiquetas.elementAt(15).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(13).getCentro(),this.tag.etiquetas.elementAt(12).getCentro())),
+      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(18).getCentro(),this.tag.etiquetas.elementAt(20).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(11).getCentro(),this.tag.etiquetas.elementAt(19).getCentro())),
+      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(10).getCentro(),this.tag.etiquetas.elementAt(10).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(5).getCentro(),this.tag.etiquetas.elementAt(13).getCentro())),
+      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(5).getCentro(),this.tag.etiquetas.elementAt(11).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(6).getCentro(),this.tag.etiquetas.elementAt(12).getCentro())),
+      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(6).getCentro(),this.tag.etiquetas.elementAt(7).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(17).getCentro(),this.tag.etiquetas.elementAt(11).getCentro())),
+      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(13).getCentro(),this.tag.etiquetas.elementAt(3).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(11).getCentro(),this.tag.etiquetas.elementAt(17).getCentro())),
+      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(12).getCentro(),this.tag.etiquetas.elementAt(11).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(4).getCentro(),this.tag.etiquetas.elementAt(16).getCentro())),
+      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(14).getCentro(),this.tag.etiquetas.elementAt(4).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(2).getCentro(),this.tag.etiquetas.elementAt(11).getCentro())),
+      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(10).getCentro(),this.tag.etiquetas.elementAt(16).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(19).getCentro(),this.tag.etiquetas.elementAt(5).getCentro())),
+      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(20).getCentro(),this.tag.etiquetas.elementAt(17).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(16).getCentro(),this.tag.etiquetas.elementAt(6).getCentro())),
+      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(9).getCentro(),this.tag.etiquetas.elementAt(20).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(15).getCentro(),this.tag.etiquetas.elementAt(17).getCentro())),
+    ];
+    this.diametro = [
+      Longitud("", this.tag.etiquetas.elementAt(10).getCentro(),this.tag.etiquetas.elementAt(14).getCentro()),
+      Longitud("", this.tag.etiquetas.elementAt(15).getCentro(),this.tag.etiquetas.elementAt(3).getCentro()),
+      Longitud("", this.tag.etiquetas.elementAt(2).getCentro(),this.tag.etiquetas.elementAt(6).getCentro()),
+      Longitud("",this.tag.etiquetas.elementAt(8).getCentro(),this.tag.etiquetas.elementAt(13).getCentro()),
+      Longitud("", this.tag.etiquetas.elementAt(16).getCentro(),this.tag.etiquetas.elementAt(18).getCentro()),
+      Longitud("", this.tag.etiquetas.elementAt(14).getCentro(),this.tag.etiquetas.elementAt(15).getCentro()),
+      Longitud("", this.tag.etiquetas.elementAt(13).getCentro(),this.tag.etiquetas.elementAt(7).getCentro()),
+      Longitud("", this.tag.etiquetas.elementAt(17).getCentro(),this.tag.etiquetas.elementAt(9).getCentro()),
+      Longitud("", this.tag.etiquetas.elementAt(19).getCentro(),this.tag.etiquetas.elementAt(15).getCentro())
+    ];
 
     setCm();
     printear();
