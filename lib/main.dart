@@ -39,7 +39,8 @@ class _MyAppState extends State<MyApp> {
                   child: Text('Hola')),
               preloaded
                   ? Image.file(File(photo1.globalpath))
-                  : Image.file(File('/data/user/0/com.example.nativejavacode/cache/2021-06-1918:01:42.976437.png'))
+                  : Image.file(File(
+                      '/data/user/0/com.example.nativejavacode/cache/2021-06-3020:04:51.261523.png'))
             ],
           )),
     );

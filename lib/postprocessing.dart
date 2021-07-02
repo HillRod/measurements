@@ -3,6 +3,8 @@ import 'package:flutter/material.dart' as Material;
 import 'package:image/image.dart';
 import 'dart:io';
 import 'dart:ui' as F;
+import 'package:color_convert/color_convert.dart' as Convert;
+import 'package:nativejavacode/points.dart';
 
 /*Future<Image> gaussProcess(File f) async {
   Image image = decodeImage(f.readAsBytesSync());
@@ -13,33 +15,72 @@ import 'dart:ui' as F;
 
 void segmentHSV(String path) {
   print(path);
-  List<double> mingreenHSV = [100.0, 80.0, 70.0], maxgreenHSV = [185, 255, 255];
-  List<double> minblueHSV = [210.0, 80.0, 70.0], maxblueHSV = [250, 255, 255];
+  List<double> mingreenHSV = [100.0, 30.0, 27.0], maxgreenHSV = [175, 100, 100];
+  List<double> minblueHSV = [150, 35.0, 30.0], maxblueHSV = [240, 100, 100];
+
   Image image = decodeImage(File(path).readAsBytesSync());
+
   print(image.width);
   print(image.height);
+  bool bluent = true;
+  var bluestandart = [0, 0, 0];
+  int div = 0;
   for (var i = 0; i < image.width; i++) {
-    for (var j = 0; j < image.height; j++) {
+    for (var j = image.height - 1; j >= 0; j--) {
       F.Color c = F.Color(image.getPixel(i, j));
-      List<double> cHSV = rgb_to_hsv(c.red.ceilToDouble() / 255,
-          c.green.ceilToDouble() / 255, c.blue.ceilToDouble() / 255);
-          //if green
+      var cHSV = Convert.convert.rgb.hsv(c.red, c.green, c.blue);
+
+      //print(Convert.convert.rgb.hsv(c.red, c.green, c.blue));
+      //if green
       if ((cHSV[0] >= mingreenHSV[0] && cHSV[0] <= maxgreenHSV[0]) &&
           (cHSV[1] >= mingreenHSV[1] && cHSV[1] <= maxgreenHSV[1]) &&
-          (cHSV[2] >= mingreenHSV[2] && cHSV[2] <= maxgreenHSV[2]))
+          (cHSV[2] >= mingreenHSV[2] && cHSV[2] <= maxgreenHSV[2])) {
         image.setPixel(i, j, Material.Colors.white.value);
-          //else
-      else if ((cHSV[0] >= minblueHSV[0] && cHSV[0] <= maxblueHSV[0]) &&
-          (cHSV[1] >= minblueHSV[1] && cHSV[1] <= maxblueHSV[1]) &&
-          (cHSV[2] >= minblueHSV[2] && cHSV[2] <= maxblueHSV[2]))
+        //
+        //print(cHSV);
+        //else if blue
+
+      } else if (bluent && i == 0) {
+        bluestandart[0] += cHSV[0];
+        bluestandart[1] += cHSV[1];
+        bluestandart[2] += cHSV[2];
+        div++;
+        //print(minblueHSV);
+        //print(maxblueHSV);
         image.setPixel(i, j, Material.Colors.green.value);
-      else
+        print(cHSV);
+        print(i.toString() + " " + j.toString());
+      } else if ((cHSV[0] >= minblueHSV[0] && cHSV[0] <= maxblueHSV[0]) &&
+          (cHSV[1] >= minblueHSV[1] && cHSV[1] <= maxblueHSV[1]) &&
+          (cHSV[2] >= minblueHSV[2] && cHSV[2] <= maxblueHSV[2])) {
+        image.setPixel(i, j, Material.Colors.green.value);
+        //print("Verde");
+        //print(cHSV);
+      } else
         image.setPixel(i, j, Material.Colors.black.value);
       //print(i.toString()+" "+j.toString());
 
     }
+    bluent = false;
+    minblueHSV = [
+      bluestandart[0] / div - 40.0,
+      bluestandart[1] / div - 25.0,
+      bluestandart[2] / div - 25.0
+    ];
+    maxblueHSV = [
+      bluestandart[0] / div + 40.0,
+      bluestandart[1] / div + 25.0,
+      bluestandart[2] / div + 25.0
+    ];
   }
+
+  print("Finiched");
   File(path).writeAsBytesSync(encodeJpg(image));
+  Tagging tag = Tagging(image);
+  tag.buscarEtiquetas();
+  MeasureSet ms = MeasureSet(tag);
+  //print("Hola");
+  //ms.printear();
 }
 
 List<double> rgb_to_hsv(double r, double g, double b) {
