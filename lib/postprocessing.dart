@@ -3,8 +3,10 @@ import 'package:flutter/material.dart' as Material;
 import 'package:image/image.dart';
 import 'dart:io';
 import 'dart:ui' as F;
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:color_convert/color_convert.dart' as Convert;
 import 'package:nativejavacode/points.dart';
+import 'package:path_provider/path_provider.dart';
 
 /*Future<Image> gaussProcess(File f) async {
   Image image = decodeImage(f.readAsBytesSync());
@@ -13,8 +15,10 @@ import 'package:nativejavacode/points.dart';
   return Image.fromBytes(image.width, image.height, gausblur);
 }*/
 
-void segmentHSV(String path) {
+void segmentHSV(String path) async {
+  
   print(path);
+
   List<double> mingreenHSV = [100.0, 30.0, 27.0], maxgreenHSV = [175, 100, 100];
   List<double> minblueHSV = [150, 35.0, 30.0], maxblueHSV = [240, 100, 100];
 
@@ -76,9 +80,18 @@ void segmentHSV(String path) {
 
   print("Finiched");
   File(path).writeAsBytesSync(encodeJpg(image));
-  Tagging tag = Tagging(image);
-  tag.buscarEtiquetas();
-  MeasureSet ms = MeasureSet(tag);
+  
+  //File f = await getImageFileFromAssets('binarized1.png');
+  File f2 = await getImageFileFromAssets('binarized2.png');
+  
+  //Image fixed = decodeImage(f.readAsBytesSync());
+  Image fixed2 = decodeImage(f2.readAsBytesSync());
+  
+  
+    Tagging tag = Tagging(image,fixed2);
+    tag.buscarEtiquetas();
+    MeasureSet ms = MeasureSet(tag);
+  
   //print("Hola");
   //ms.printear();
 }
@@ -105,4 +118,13 @@ List<double> rgb_to_hsv(double r, double g, double b) {
   h = (h / 6.0) % 1.0;
   //print([h, s, v]);
   return [h * 360, s * 255, v * 255];
+}
+
+Future<File> getImageFileFromAssets(String path) async {
+  final byteData = await rootBundle.load('assets/images/$path');
+
+  final file = File('${(await getTemporaryDirectory()).path}/$path');
+  await file.writeAsBytes(byteData.buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+
+  return file;
 }

@@ -37,10 +37,10 @@ class _MyAppState extends State<MyApp> {
                     setImage(photo1);
                   },
                   child: Text('Hola')),
-              preloaded
+              /*preloaded
                   ? Image.file(File(photo1.globalpath))
                   : Image.file(File(
-                      '/data/user/0/com.example.nativejavacode/cache/2021-06-3020:04:51.261523.png'))
+                      '/data/user/0/com.example.nativejavacode/cache/2021-06-3020:04:51.261523.png'))*/
             ],
           )),
     );

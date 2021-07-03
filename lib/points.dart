@@ -106,11 +106,11 @@ class Tagging {
   Longitud meter;
   Punto m1, m2;
 
-  Tagging(Image imagen) {
+  Tagging(Image imagen,Image image2) {
     this.imagen = imagen;
     this.etiquetas = new List<Etiqueta>();
-    this.m1 = new Punto(0, 0);
-    this.m2 = new Punto(0, 0);
+    this.m1 = new Punto(150, 300);
+    this.m2 = new Punto(150, 600);
   }
 
   void addEtiqueta(Etiqueta e) {
@@ -118,14 +118,17 @@ class Tagging {
   }
 
   void setMeter() {
-    for (int j = 0; j < imagen.height; j++) {
-      for (int i = 0; i < imagen.width; i++) {
+    for (var i = 0; i < imagen.width; i++) {
+    for (var j = imagen.height - 1; j >= 0; j--) {
         //Setear el Metro en base a los puntos identificados como rojos
-        if (imagen.getPixel(i, j) == Material.Colors.red.value) {
+        if (imagen.getPixel(i, j) == 0xffff0000) {
           if (m1.getX() == 0 && m1.getY() == 0)
-            m1 = new Punto(i, j);
+            //m1 = new Punto(i, j);
+            m1 = new Punto(150, 300);
           else if ((m1.getX() != 0 && m1.getY() != 0) &&
-              (m2.getX() == 0 && m2.getY() == 0)) m2 = new Punto(i, j);
+              (m2.getX() == 0 && m2.getY() == 0)) 
+              //m2 = new Punto(i, j);
+              m2 = new Punto(150, 600);
           j += 50;
         }
       }
@@ -134,22 +137,27 @@ class Tagging {
   }
 
   void buscarEtiquetas() {
-    for (int j = 0; j < imagen.height; j++) {
-      for (int i = 0; i < imagen.width; i++) {
+    for (var i = 0; i < imagen.width; i++) {
+    for (var j = imagen.height - 1; j >= 0; j--) {
         //Buscar etiquetas verdes
-        if (imagen.getPixel(i, j) == Material.Colors.green.value) {
+        if (imagen.getPixel(i, j) == 0xff00ff00) {
           Etiqueta a = establecerEtiqueta(i, j);
-          if (!existe(a)) etiquetas.add(a);
+          if (!existe(a)) 
+          {
+            etiquetas.add(a);
+            i+=4;
+            j+=4;
+          }
         }
       }
     }
     setEnds();
     setMeter();
     for (var i = 0; i < 22; i++) {
-      Etiqueta e;
-      e.addPunto(Punto(Random().nextInt(1080), Random().nextInt(1920)));
+      Etiqueta e = new Etiqueta();     
+      e.addPunto(new Punto(Random().nextInt(100), Random().nextInt(100)));
       e.setCentro();
-      etiquetas.add(Etiqueta());
+      etiquetas.add(e);
     }
   }
 
@@ -158,7 +166,7 @@ class Tagging {
     for (int i = x - 10; i < x + 20; i++) {
       for (int j = y - 10; j < y + 20; j++) {
         //Buscar etiquetas verdes
-        if (imagen.getPixel(i, j) == Material.Colors.green.value) {
+        if (imagen.getPixel(i, j) == 0xff00ff00) {
           e.addPunto(new Punto(i, j));
         }
       }
@@ -218,11 +226,13 @@ class Tagging {
 
 class Perimetro {
   Longitud largo, ancho;
+  double p;
 
   Perimetro(Longitud largo, Longitud ancho) {
     this.largo = largo;
     this.ancho = ancho;
   }
+
 
   Longitud getLargo() {
     return largo;
@@ -240,19 +250,24 @@ class Perimetro {
     this.ancho = ancho;
   }
 
+  double getP(){
+    return this.p;
+  }
+
+  void setP(double p){
+    this.p = p;
+  }
+
   double calculatePerimeter() {
-    return 2 *
-        pi *
-        sqrt((pow(largo.getLonglong() / 2.0, 2) +
-                pow(ancho.getLonglong() / 2.0, 2)) /
-            2);
+    p = 2 * pi * sqrt((pow(largo.getLonglong() / 2.0, 2) +  pow(ancho.getLonglong() / 2.0, 2)) /2);
+    return p;
   }
 }
 
 class MeasureSet {
   //Longitudes acromiale,radiale,midstylon,tronchanteriontibiale,tibiale,illiospinale,tronchanterion;
   //Perimetros cabeza,cuello,torax,brazo,cintura, antebrazo, muneca,gluteo,muslo1cm,muslomedio,pierna,tobillo;
-  //Diametros anteposteriortorax, biacramial, biepicondileofemur, biepicondileohumero, biestiloideo, biliocrestal, longituddepie, sagital,transverso
+  
   List<Longitud> longitudes;
   List<Perimetro> perimetros;
   List<Longitud> diametro;
@@ -272,30 +287,30 @@ class MeasureSet {
       Longitud("tronchanterion", this.tag.etiquetas.elementAt(4).getCentro(),this.tag.etiquetas.elementAt(7).getCentro())
     ];
     this.perimetros = [
-      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(10).getCentro(),this.tag.etiquetas.elementAt(15).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(14).getCentro(),this.tag.etiquetas.elementAt(6).getCentro())),
-      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(13).getCentro(),this.tag.etiquetas.elementAt(16).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(15).getCentro(),this.tag.etiquetas.elementAt(5).getCentro())),
-      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(10).getCentro(),this.tag.etiquetas.elementAt(15).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(13).getCentro(),this.tag.etiquetas.elementAt(12).getCentro())),
-      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(18).getCentro(),this.tag.etiquetas.elementAt(20).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(11).getCentro(),this.tag.etiquetas.elementAt(19).getCentro())),
-      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(10).getCentro(),this.tag.etiquetas.elementAt(10).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(5).getCentro(),this.tag.etiquetas.elementAt(13).getCentro())),
-      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(5).getCentro(),this.tag.etiquetas.elementAt(11).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(6).getCentro(),this.tag.etiquetas.elementAt(12).getCentro())),
-      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(6).getCentro(),this.tag.etiquetas.elementAt(7).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(17).getCentro(),this.tag.etiquetas.elementAt(11).getCentro())),
-      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(13).getCentro(),this.tag.etiquetas.elementAt(3).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(11).getCentro(),this.tag.etiquetas.elementAt(17).getCentro())),
-      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(12).getCentro(),this.tag.etiquetas.elementAt(11).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(4).getCentro(),this.tag.etiquetas.elementAt(16).getCentro())),
-      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(14).getCentro(),this.tag.etiquetas.elementAt(4).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(2).getCentro(),this.tag.etiquetas.elementAt(11).getCentro())),
-      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(10).getCentro(),this.tag.etiquetas.elementAt(16).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(19).getCentro(),this.tag.etiquetas.elementAt(5).getCentro())),
-      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(20).getCentro(),this.tag.etiquetas.elementAt(17).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(16).getCentro(),this.tag.etiquetas.elementAt(6).getCentro())),
-      Perimetro(Longitud(" ",this.tag.etiquetas.elementAt(9).getCentro(),this.tag.etiquetas.elementAt(20).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(15).getCentro(),this.tag.etiquetas.elementAt(17).getCentro())),
+      Perimetro(Longitud("cabeza ",this.tag.etiquetas.elementAt(10).getCentro(),this.tag.etiquetas.elementAt(15).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(14).getCentro(),this.tag.etiquetas.elementAt(6).getCentro())),
+      Perimetro(Longitud("cuello ",this.tag.etiquetas.elementAt(13).getCentro(),this.tag.etiquetas.elementAt(16).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(15).getCentro(),this.tag.etiquetas.elementAt(5).getCentro())),
+      Perimetro(Longitud("torax ",this.tag.etiquetas.elementAt(10).getCentro(),this.tag.etiquetas.elementAt(15).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(13).getCentro(),this.tag.etiquetas.elementAt(12).getCentro())),
+      Perimetro(Longitud("brazo ",this.tag.etiquetas.elementAt(18).getCentro(),this.tag.etiquetas.elementAt(20).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(11).getCentro(),this.tag.etiquetas.elementAt(19).getCentro())),
+      Perimetro(Longitud("cintura ",this.tag.etiquetas.elementAt(10).getCentro(),this.tag.etiquetas.elementAt(10).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(5).getCentro(),this.tag.etiquetas.elementAt(13).getCentro())),
+      Perimetro(Longitud("antebrazo ",this.tag.etiquetas.elementAt(5).getCentro(),this.tag.etiquetas.elementAt(11).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(6).getCentro(),this.tag.etiquetas.elementAt(12).getCentro())),
+      Perimetro(Longitud("muneca ",this.tag.etiquetas.elementAt(6).getCentro(),this.tag.etiquetas.elementAt(7).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(17).getCentro(),this.tag.etiquetas.elementAt(11).getCentro())),
+      Perimetro(Longitud("gluteo ",this.tag.etiquetas.elementAt(13).getCentro(),this.tag.etiquetas.elementAt(3).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(11).getCentro(),this.tag.etiquetas.elementAt(17).getCentro())),
+      Perimetro(Longitud("muslo1cm ",this.tag.etiquetas.elementAt(12).getCentro(),this.tag.etiquetas.elementAt(11).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(4).getCentro(),this.tag.etiquetas.elementAt(16).getCentro())),
+      Perimetro(Longitud("muslomedio ",this.tag.etiquetas.elementAt(14).getCentro(),this.tag.etiquetas.elementAt(4).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(2).getCentro(),this.tag.etiquetas.elementAt(11).getCentro())),
+      Perimetro(Longitud("pierna ",this.tag.etiquetas.elementAt(10).getCentro(),this.tag.etiquetas.elementAt(16).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(19).getCentro(),this.tag.etiquetas.elementAt(5).getCentro())),
+      Perimetro(Longitud("tobillo ",this.tag.etiquetas.elementAt(20).getCentro(),this.tag.etiquetas.elementAt(17).getCentro()), Longitud(" ",this.tag.etiquetas.elementAt(16).getCentro(),this.tag.etiquetas.elementAt(6).getCentro())),
+      
     ];
     this.diametro = [
-      Longitud("", this.tag.etiquetas.elementAt(10).getCentro(),this.tag.etiquetas.elementAt(14).getCentro()),
-      Longitud("", this.tag.etiquetas.elementAt(15).getCentro(),this.tag.etiquetas.elementAt(3).getCentro()),
-      Longitud("", this.tag.etiquetas.elementAt(2).getCentro(),this.tag.etiquetas.elementAt(6).getCentro()),
-      Longitud("",this.tag.etiquetas.elementAt(8).getCentro(),this.tag.etiquetas.elementAt(13).getCentro()),
-      Longitud("", this.tag.etiquetas.elementAt(16).getCentro(),this.tag.etiquetas.elementAt(18).getCentro()),
-      Longitud("", this.tag.etiquetas.elementAt(14).getCentro(),this.tag.etiquetas.elementAt(15).getCentro()),
-      Longitud("", this.tag.etiquetas.elementAt(13).getCentro(),this.tag.etiquetas.elementAt(7).getCentro()),
-      Longitud("", this.tag.etiquetas.elementAt(17).getCentro(),this.tag.etiquetas.elementAt(9).getCentro()),
-      Longitud("", this.tag.etiquetas.elementAt(19).getCentro(),this.tag.etiquetas.elementAt(15).getCentro())
+      Longitud("anteposteriortorax", this.tag.etiquetas.elementAt(10).getCentro(),this.tag.etiquetas.elementAt(14).getCentro()),
+      Longitud("biacramial", this.tag.etiquetas.elementAt(15).getCentro(),this.tag.etiquetas.elementAt(3).getCentro()),
+      Longitud("biepicondileofemur", this.tag.etiquetas.elementAt(2).getCentro(),this.tag.etiquetas.elementAt(6).getCentro()),
+      Longitud("biepicondileohumero",this.tag.etiquetas.elementAt(8).getCentro(),this.tag.etiquetas.elementAt(13).getCentro()),
+      Longitud("biestiloideo", this.tag.etiquetas.elementAt(16).getCentro(),this.tag.etiquetas.elementAt(18).getCentro()),
+      Longitud("biliocrestal", this.tag.etiquetas.elementAt(14).getCentro(),this.tag.etiquetas.elementAt(15).getCentro()),
+      Longitud("longituddepie", this.tag.etiquetas.elementAt(13).getCentro(),this.tag.etiquetas.elementAt(7).getCentro()),
+      Longitud("sagital", this.tag.etiquetas.elementAt(17).getCentro(),this.tag.etiquetas.elementAt(9).getCentro()),
+      Longitud("transverso", this.tag.etiquetas.elementAt(19).getCentro(),this.tag.etiquetas.elementAt(15).getCentro())
     ];
 
     setCm();
@@ -306,12 +321,28 @@ class MeasureSet {
     longitudes.forEach((longitude) {
       print(longitude.name + ": " + longitude.getLonglong().toString());
     });
+    perimetros.forEach((longitude) {
+      print(longitude.getLargo().name + ": " +longitude.calculatePerimeter().toString());
+    });
+    diametro.forEach((longitude) {
+      print(longitude.name + ": " + longitude.getLonglong().toString());
+    });
+    print("//////////////");
   }
 
   void setCm() {
     longitudes.forEach((longitude) {
       longitude.setLonglong(
-          (longitude.getLonglong() * 100) / this.tag.meter.getLonglong() - 12);
+          (longitude.getLonglong() * 100) / this.tag.meter.getLonglong());
+    });
+    perimetros.forEach((longitude) {
+      longitude.calculatePerimeter();
+      longitude.setP(
+          (longitude.getP() * 100) / this.tag.meter.getLonglong());
+    });
+    diametro.forEach((longitude) {
+      longitude.setLonglong(
+          (longitude.getLonglong() * 100) / this.tag.meter.getLonglong() );
     });
   }
 }
